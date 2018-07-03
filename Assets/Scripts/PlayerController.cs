@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour {
     [Tooltip("In ms^-1")] [SerializeField] float controlSpeed = 12f;
     [Tooltip("In m")] [SerializeField] float xRange = 5f;
     [Tooltip("In m")] [SerializeField] float yRange = 3f;
+    [SerializeField] GameObject[] guns;
 
     [Header("Screen-Position Based")]
     [SerializeField] float positionPitchFactor = -5;
@@ -24,6 +26,16 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Start() {
 
+    }
+
+    void Update()
+    {
+        if (isControlEnabled)
+        {
+            ProcessTransform();
+            ProcessRotation();
+            ProcessFiring();
+        }
     }
 
     void ProcessTransform()
@@ -58,19 +70,38 @@ public class PlayerController : MonoBehaviour {
         transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
     }
 
+    void ProcessFiring()
+    {
+        if(CrossPlatformInputManager.GetButton("Fire"))
+        {
+            ActivateGuns();
+        }
+        else
+        {
+            DeactivateGuns();
+        }
+    }
+
+    private void ActivateGuns()
+    {
+        foreach(GameObject gun in guns)
+        {
+            gun.SetActive(true);
+        }
+    }
+    private void DeactivateGuns()
+    {
+        foreach (GameObject gun in guns)
+        {
+            gun.SetActive(false);
+        }
+    }
+
     void OnPlayerDeath() //called by string reference
     {
         isControlEnabled = false;
         print("Controls Frozen");
     }
 	
-	// Update is called once per frame
-	void Update ()
-    {
-        if(isControlEnabled)
-        {
-            ProcessTransform();
-            ProcessRotation();
-        }
-    }
+
 }

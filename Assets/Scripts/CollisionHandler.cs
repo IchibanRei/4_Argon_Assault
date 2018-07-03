@@ -23,6 +23,6 @@ public class CollisionHandler : MonoBehaviour {
 
     private void ReloadScene() //string referenced
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }
